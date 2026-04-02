@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaymentController;
 
 // Landing Page (Beranda Non-Login)
 Route::get('/', function () {
@@ -35,6 +36,20 @@ Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', function () {
             return view('dashboard.index');
+        });
+        
+        Route::get('/pembayaran', function() {
+            return view('dashboard.pembayaran');
+        });
+
+        Route::post('/pembayaran/checkout', [PaymentController::class, 'createInvoice'])->name('checkout');
+
+        Route::get('/identitas', function() {
+            return view('dashboard.identitas');
+        });
+
+        Route::get('/dokumen', function() {
+            return view('dashboard.dokumen');
         });
     });
 });

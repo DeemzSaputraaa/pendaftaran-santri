@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +14,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // Membuat Akun Admin Utama
+        User::create([
+            'name' => 'Administrator Pesantren',
+            'email' => 'admin@pesantren.com',
+            'phone' => '081234567890',
+            'password' => Hash::make('password123'),
+            'role' => 'admin',
+            'status_pendaftaran' => 'selesai',
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // (Opsional) Membuat Akun Contoh Santri
+        User::create([
+            'name' => 'Calon Santri A',
+            'email' => 'santri@pesantren.com',
+            'phone' => '089876543210',
+            'password' => Hash::make('password123'),
+            'role' => 'santri',
+            'status_pendaftaran' => 'belum_bayar',
+        ]);
     }
 }
