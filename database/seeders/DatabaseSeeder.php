@@ -2,36 +2,34 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Membuat Akun Admin Utama
+        // Akun Admin
         User::create([
-            'name' => 'Administrator Pesantren',
-            'email' => 'admin@pesantren.com',
+            'name' => 'Administrator CMI',
+            'email' => 'admin@cmi.ac.id',
             'phone' => '081234567890',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('admin123'),
             'role' => 'admin',
-            'status_pendaftaran' => 'selesai',
+            'nomor_registrasi' => null,
+            'status_pendaftaran' => 'aktif',
         ]);
 
-        // (Opsional) Membuat Akun Contoh Santri
+        // Akun Contoh Santri (Opsional)
         User::create([
-            'name' => 'Calon Santri A',
-            'email' => 'santri@pesantren.com',
+            'name' => 'Ahmad Fauzan',
+            'email' => 'santri@cmi.ac.id',
             'phone' => '089876543210',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('santri123'),
             'role' => 'santri',
-            'status_pendaftaran' => 'belum_bayar',
+            'nomor_registrasi' => User::generateNomorRegistrasi(),
+            'status_pendaftaran' => 'pendaftar_baru',
         ]);
     }
 }

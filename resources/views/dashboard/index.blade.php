@@ -4,118 +4,134 @@
 @section('header', 'Status Pendaftaran')
 
 @section('content')
-<div class="grid lg:grid-cols-3 gap-8">
-    <!-- Left Column: Status Map & Main Info -->
-    <div class="lg:col-span-2 space-y-6">
-        
+<div class="row g-4">
+    <div class="col-lg-8">
         <!-- Welcome Card -->
-        <div class="bg-gradient-to-r from-blue-500 to-blue-700 rounded-2xl p-8 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
-            <div class="absolute right-0 top-0 opacity-10 blur-xl">
-                <svg class="h-64 w-64" viewBox="0 0 100 100" fill="currentColor">
-                    <circle cx="50" cy="50" r="50"/>
-                </svg>
-            </div>
-            <div class="relative z-10">
-                <h1 class="text-2xl font-bold mb-2">Assalamu'alaikum, Calon Santri!</h1>
-                <p class="text-blue-100 mb-6 max-w-lg leading-relaxed">Selamat datang di sistem pendaftaran santri baru Pesantren Al-Hikmah. Lengkapi seluruh persyaratan agar Anda dapat segera dijadwalkan untuk tes masuk.</p>
-                
-                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm shadow border border-white/30 rounded-lg text-white text-sm">
-                    Status saat ini: <strong class="font-bold tracking-wide uppercase">MENUNGGU PEMBAYARAN</strong>
+        <div class="card border-0 text-white mb-4" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0); border-radius: 16px;">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-2">Assalamu'alaikum, {{ $user->name }}!</h4>
+                <p class="mb-3" style="color:rgba(255,255,255,.75)">Selamat datang di Sistem Pendaftaran Santri Baru Pesantren & BCB Cahaya Mutiara Insani.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <span class="badge bg-white bg-opacity-25 px-3 py-2 fw-semibold">
+                        <i class="bi bi-hash me-1"></i> {{ $user->nomor_registrasi }}
+                    </span>
+                    @php
+                        $statusConfig = [
+                            'pendaftar_baru' => ['label' => 'Lengkapi Data', 'bg' => 'warning'],
+                            'data_lengkap' => ['label' => 'Data Lengkap', 'bg' => 'info'],
+                            'berkas_terverifikasi' => ['label' => 'Berkas Terverifikasi', 'bg' => 'info'],
+                            'menunggu_seleksi' => ['label' => 'Menunggu Seleksi', 'bg' => 'secondary'],
+                            'lulus' => ['label' => 'LULUS', 'bg' => 'success'],
+                            'cadangan' => ['label' => 'CADANGAN', 'bg' => 'warning'],
+                            'tidak_lulus' => ['label' => 'TIDAK LULUS', 'bg' => 'danger'],
+                            'daftar_ulang' => ['label' => 'Daftar Ulang', 'bg' => 'primary'],
+                            'aktif' => ['label' => 'SANTRI AKTIF', 'bg' => 'success'],
+                        ];
+                        $cfg = $statusConfig[$user->status_pendaftaran] ?? ['label' => $user->status_pendaftaran, 'bg' => 'secondary'];
+                    @endphp
+                    <span class="badge bg-{{ $cfg['bg'] }} px-3 py-2 fw-bold">
+                        {{ $cfg['label'] }}
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!-- Progress Flow -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-            <h3 class="text-xl font-bold text-slate-800 mb-2">Tahapan Pendaftaran Anda</h3>
-            <p class="text-slate-500 mb-6 border-b border-slate-100 pb-6">Ikuti langkah-langkah di bawah ini untuk menyelesaikan proses pendaftaran santri baru.</p>
-            
-            <div class="space-y-6">
-                <!-- Tahap 1 -->
-                <div class="flex gap-4 items-start opacity-70">
-                    <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white shrink-0 mt-1 shadow-md">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-lg">Pendaftaran Akun</h4>
-                        <p class="text-sm text-slate-500 mt-1">Anda telah berhasil membuat akun di sistem.</p>
-                    </div>
-                </div>
+        <!-- Progress Steps -->
+        <div class="card border-0 shadow-sm" style="border-radius:16px">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-1">Tahapan Pendaftaran Anda</h5>
+                <p class="text-secondary small mb-4 pb-3 border-bottom">Ikuti langkah-langkah di bawah ini untuk menyelesaikan proses pendaftaran.</p>
 
-                <!-- Tahap 2 Aktif -->
-                <div class="flex gap-4 items-start relative">
-                    <div class="w-8 h-8 rounded-full border-4 border-blue-100 bg-blue-500 flex items-center justify-center text-white shrink-0 mt-1 shadow-lg shadow-blue-500/30">
-                        <span class="text-xs font-bold font-sans">2</span>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-slate-800 text-lg">Pembayaran Biaya Pendaftaran</h4>
-                        <div class="mt-3 p-4 bg-amber-50 rounded-lg border border-amber-200 text-amber-800 text-sm flex items-start gap-3">
-                            <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            <div>
-                                <p class="font-semibold mb-1">Menunggu unggah bukti pembayaran</p>
-                                <p class="opacity-80">Silakan bayar biaya pendaftaran sebesar Rp 300.000 ke rekening BSI 1234567890 an. Pesantren Al-Hikmah. Lalu unggah bukti transfer.</p>
-                                <a href="/dashboard/pembayaran" class="inline-block mt-3 bg-amber-500 hover:bg-amber-600 px-4 py-1.5 rounded text-white font-medium transition-colors">Bayar Sekarang</a>
-                            </div>
+                @php
+                    $hasPembayaran = $user->pembayaran !== null;
+                    $steps = [
+                        ['key' => 'akun', 'icon' => 'bi-person-check-fill', 'title' => 'Pendaftaran Akun', 'desc' => 'Anda telah berhasil membuat akun.', 'done' => true],
+                        ['key' => 'identitas', 'icon' => 'bi-card-list', 'title' => 'Lengkapi Identitas & Dokumen', 'desc' => 'Isi biodata, upload berkas, dan video bacaan.', 'done' => $hasBiodata && $hasAllDocs],
+                        ['key' => 'pembayaran', 'icon' => 'bi-cash-stack', 'title' => 'Biaya Pendaftaran', 'desc' => 'Upload bukti pembayaran biaya pendaftaran.', 'done' => $hasPembayaran],
+                        ['key' => 'seleksi', 'icon' => 'bi-clipboard-check-fill', 'title' => 'Verifikasi & Seleksi', 'desc' => 'Admin memverifikasi berkas & pembayaran serta menginput hasil tes.', 'done' => in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus','aktif'])],
+                        ['key' => 'pengumuman', 'icon' => 'bi-megaphone-fill', 'title' => 'Pengumuman', 'desc' => 'Cek hasil seleksi melalui menu pengumuman.', 'done' => in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus','aktif'])],
+                    ];
+                @endphp
+
+                @foreach($steps as $i => $step)
+                    <div class="d-flex gap-3 mb-3 {{ !$step['done'] && ($i > 0 && !$steps[$i-1]['done']) ? 'opacity-50' : '' }}">
+                        <div>
+                            @if($step['done'])
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:36px; height:36px">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                            @elseif($i === 0 || $steps[$i-1]['done'])
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:36px; height:36px; box-shadow:0 4px 12px rgba(13,110,253,.3)">
+                                    <span class="fw-bold small">{{ $i + 1 }}</span>
+                                </div>
+                            @else
+                                <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center border" style="width:36px; height:36px">
+                                    <span class="fw-bold small">{{ $i + 1 }}</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold mb-1">{{ $step['title'] }}</h6>
+                            <p class="text-secondary small mb-0">{{ $step['desc'] }}</p>
+
+                            @if($step['key'] === 'identitas' && !$step['done'])
+                                <div class="mt-2">
+                                    <a href="/dashboard/identitas" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square me-1"></i> Isi Biodata</a>
+                                    <a href="/dashboard/dokumen" class="btn btn-sm btn-outline-primary"><i class="bi bi-upload me-1"></i> Upload Dokumen</a>
+                                </div>
+                            @endif
+
+                            @if($step['key'] === 'pembayaran' && !$step['done'] && $steps[$i-1]['done'])
+                                <div class="mt-2">
+                                    <a href="/dashboard/biaya-pendaftaran" class="btn btn-sm btn-warning"><i class="bi bi-cash-stack me-1"></i> Bayar Pendaftaran</a>
+                                </div>
+                            @endif
+
+                            @if($step['key'] === 'pengumuman' && in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus']))
+                                <div class="mt-2">
+                                    <a href="/pengumuman" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-megaphone me-1"></i> Lihat Pengumuman</a>
+                                </div>
+                            @endif
                         </div>
                     </div>
-                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 
-                <!-- Tahap 3 -->
-                <div class="flex gap-4 items-start opacity-40">
-                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0 mt-1 font-bold text-xs">3</div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-lg">Lengkapi Biodata</h4>
-                        <p class="text-sm text-slate-500 mt-1">Isi formulir identitas santri, alamat, dan data wali setelah pembayaran divalidasi admin.</p>
-                    </div>
-                </div>
-
-                <!-- Tahap 4 -->
-                <div class="flex gap-4 items-start opacity-40">
-                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0 mt-1 font-bold text-xs">4</div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-lg">Unggah Dokumen Berkas</h4>
-                        <p class="text-sm text-slate-500 mt-1">Upload scan KK, Akta Kelahiran, dan dokumen lainnya.</p>
-                    </div>
-                </div>
-
-                <!-- Tahap 5 -->
-                <div class="flex gap-4 items-start opacity-40">
-                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0 mt-1 font-bold text-xs">5</div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-lg">Pengumuman & Daftar Ulang</h4>
-                        <p class="text-sm text-slate-500 mt-1">Cetak kartu ujian, ikuti seleksi, dan lakukan daftar ulang jika lulus.</p>
-                    </div>
-                </div>
+    <!-- Sidebar Info -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-4" style="border-radius:16px">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-info-circle-fill text-primary me-2"></i>Pusat Informasi</h6>
+                <ul class="list-unstyled mb-0 small text-secondary">
+                    <li class="d-flex gap-2 mb-3">
+                        <i class="bi bi-dot fs-5 text-primary"></i>
+                        <span>Seleksi dilakukan secara <strong>offline</strong> (tatap muka) setelah berkas diverifikasi.</span>
+                    </li>
+                    <li class="d-flex gap-2 mb-3">
+                        <i class="bi bi-dot fs-5 text-primary"></i>
+                        <span>Pengumuman dapat dicek menggunakan <strong>nomor registrasi</strong>.</span>
+                    </li>
+                    <li class="d-flex gap-2">
+                        <i class="bi bi-dot fs-5 text-primary"></i>
+                        <span>Hubungi panitia via WA: <strong>0812-3456-7890</strong></span>
+                    </li>
+                </ul>
             </div>
         </div>
 
-    </div>
-
-    <!-- Right Column: Sidebar Info -->
-    <div class="space-y-6">
-        
-        <!-- Info Card -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-            <h3 class="text-slate-800 font-bold mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                Pusat Informasi
-            </h3>
-            <ul class="space-y-4 text-sm text-slate-600">
-                <li class="flex items-start gap-3">
-                    <span class="text-blue-500 font-bold">•</span>
-                    <span>Wawancara calon santri akan dilakukan secara tatap muka (offline).</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-blue-500 font-bold">•</span>
-                    <span>Kartu Ujian hanya bisa dicetak jika berkas sudah lengkap (Verifikasi 100%).</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-blue-500 font-bold">•</span>
-                    <span>Jika ada kendala, hubungi panitia melalui WA: <strong>0812-3456-7890</strong>.</span>
-                </li>
-            </ul>
+        <div class="card border-0 shadow-sm" style="border-radius:16px">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-person-badge-fill text-primary me-2"></i>Data Akun Anda</h6>
+                <table class="table table-sm table-borderless small mb-0">
+                    <tr><td class="text-secondary" style="width:40%">Nama</td><td class="fw-semibold">{{ $user->name }}</td></tr>
+                    <tr><td class="text-secondary">Email</td><td class="fw-semibold">{{ $user->email }}</td></tr>
+                    <tr><td class="text-secondary">No. HP</td><td class="fw-semibold">{{ $user->phone ?? '-' }}</td></tr>
+                    <tr><td class="text-secondary">No. Reg</td><td class="fw-bold text-primary">{{ $user->nomor_registrasi }}</td></tr>
+                </table>
+            </div>
         </div>
-
     </div>
 </div>
 @endsection

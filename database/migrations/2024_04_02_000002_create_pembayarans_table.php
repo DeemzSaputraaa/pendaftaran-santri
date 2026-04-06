@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('external_id')->unique(); // Untuk ID unik Invoice Xendit
-            $table->enum('jenis_pembayaran', ['pendaftaran', 'daftar_ulang']);
+            $table->enum('jenis_pembayaran', ['biaya_pendaftaran']);
             $table->decimal('nominal', 12, 2);
-            $table->string('checkout_link')->nullable(); // Link UI pembayaran Xendit
-            $table->enum('status', ['PENDING', 'PAID', 'EXPIRED', 'FAILED'])->default('PENDING');
+            $table->string('bukti_pembayaran')->nullable(); // Path file bukti transfer
+            $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
+            $table->text('catatan_admin')->nullable();
 
             $table->timestamps();
         });

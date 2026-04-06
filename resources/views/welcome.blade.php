@@ -3,191 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Pendaftaran Santri Baru | Pesantren Masa Depan</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <meta name="description" content="Sistem Informasi Pendaftaran Santri Baru Pesantren & BCB Cahaya Mutiara Insani - Tahfidz Al-Quran Intensif & Ilmu Syar'i">
+    <title>Pendaftaran Santri Baru — Pesantren & BCB Cahaya Mutiara Insani</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
     <style>
-        html { scroll-behavior: smooth; }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .blob-anim {
-            animation: blob 7s infinite alternate;
-        }
-        @keyframes blob {
-            0% { transform: translate(0px, 0px) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0px, 0px) scale(1); }
-        }
+        :root { --cmi-theme: #0d6efd; --cmi-dark: #0a2540; --cmi-gold: #c9a84c; }
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .navbar-glass { background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,.06); }
+        .hero-section { background: linear-gradient(135deg, #0a2540 0%, #0d3868 50%, #104b8d 100%); min-height: 100vh; position: relative; overflow: hidden; }
+        .hero-section::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(201,168,76,.15) 0%, transparent 70%); border-radius: 50%; }
+        .hero-section::after { content: ''; position: absolute; bottom: -30%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(32,201,151,.1) 0%, transparent 70%); border-radius: 50%; }
+        .hero-badge { display: inline-flex; align-items: center; gap: .5rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); padding: .5rem 1rem; border-radius: 100px; font-size: .85rem; color: #a7f3d0; backdrop-filter: blur(8px); }
+        .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #34d399; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+        .btn-cmi { background: var(--cmi-gold); color: #1a2332; font-weight: 700; padding: .85rem 2rem; border-radius: 12px; border: none; transition: all .3s; }
+        .btn-cmi:hover { background: #dbb85a; color: #1a2332; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,.3); }
+        .btn-outline-light-custom { border: 1.5px solid rgba(255,255,255,.3); color: #fff; padding: .85rem 2rem; border-radius: 12px; font-weight: 600; transition: all .3s; background: transparent; }
+        .btn-outline-light-custom:hover { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.5); }
+        .step-card { background: #fff; border-radius: 16px; padding: 2rem; text-align: center; border: 1px solid #e5e7eb; transition: all .3s; height: 100%; }
+        .step-card:hover { border-color: var(--cmi-theme); transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,.08); }
+        .step-number { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.25rem; margin: 0 auto 1.25rem; }
+        .stat-item { text-align: center; }
+        .stat-item .num { font-size: 2rem; font-weight: 800; color: #fff; }
+        .stat-item .label { color: #a7f3d0; font-size: .8rem; font-weight: 500; }
+        .footer { background: #0f172a; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 antialiased overflow-x-hidden selection:bg-blue-500 selection:text-white">
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass-effect transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg flex items-center justify-center text-white font-bold text-xl">
-                        P
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-xl text-slate-900 leading-tight">Pendaftaran</h1>
-                        <p class="text-xs text-blue-600 font-medium tracking-wider uppercase">Pesantren Al-Hikmah</p>
-                    </div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top navbar-glass py-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="/">
+            <div style="width:38px; height:38px; border-radius:10px; background: linear-gradient(135deg,#0d6efd,#0dcaf0); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:.75rem;">CMI</div>
+            <div>
+                <div class="fw-bold text-dark" style="font-size:.95rem; line-height:1.2">Cahaya Mutiara Insani</div>
+                <div class="text-primary" style="font-size:.65rem; font-weight:600; letter-spacing:.03em">PESANTREN & BCB</div>
+            </div>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-link fw-semibold" href="#beranda">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link fw-medium text-secondary" href="#alur">Alur Pendaftaran</a></li>
+                <li class="nav-item"><a class="nav-link fw-medium text-secondary" href="/pengumuman">Pengumuman</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                <a href="/login" class="fw-bold text-primary text-decoration-none">Masuk</a>
+                <a href="/register" class="btn btn-primary px-4 rounded-pill fw-semibold">Daftar Sekarang</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header id="beranda" class="hero-section d-flex align-items-center text-white" style="padding-top:120px">
+    <div class="container position-relative" style="z-index:2">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="hero-badge mb-4">
+                    <span class="dot"></span>
+                    Pendaftaran Gelombang 1 Dibuka
                 </div>
-                <div class="hidden md:flex space-x-8 items-center border border-slate-200 px-6 py-2 rounded-full bg-white/60 shadow-sm">
-                    <a href="#beranda" class="text-sm font-semibold text-slate-900 hover:text-blue-600 transition-colors">Beranda</a>
-                    <a href="#informasi" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Informasi</a>
-                    <a href="#alur" class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Alur Pendaftaran</a>
+                <h1 class="font-serif display-4 fw-bold mb-4" style="line-height:1.15">
+                    Mencetak Generasi<br>
+                    <span style="color: var(--cmi-gold)">Penghafal Al-Qur'an</span>
+                </h1>
+                <p class="lead mb-5" style="color:rgba(255,255,255,.75); max-width:540px; font-weight:300; line-height:1.8">
+                    Pesantren & Bimbingan Cinta Belajar <strong>"BCB"</strong> Cahaya Mutiara Insani — pusat pendidikan berasrama yang berfokus pada <strong>Tahfidz Al-Quran Intensif</strong> dan penguatan <strong>Ilmu Syar'i</strong>, mencetak generasi berkarakter kuat dan siap mengabdi di masyarakat.
+                </p>
+
+                <div class="d-flex flex-column flex-sm-row gap-3 mb-5">
+                    <a href="/register" class="btn btn-cmi btn-lg">
+                        <i class="bi bi-pencil-square me-2"></i> Mulai Pendaftaran
+                    </a>
+                    <a href="#alur" class="btn btn-outline-light-custom btn-lg">
+                        <i class="bi bi-arrow-down-circle me-2"></i> Lihat Panduan
+                    </a>
                 </div>
-                <div class="flex items-center gap-4">
-                    <a href="/login" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors">Masuk</a>
-                    <a href="/register" class="bg-slate-900 hover:bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">Daftar Sekarang</a>
+
+                <!-- Stats dihilangkan sesuai permintaan -->
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="p-3 rounded-4" style="background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(12px);">
+                    <img src="https://images.unsplash.com/photo-1585036156171-384164a8c159?q=80&w=800&auto=format&fit=crop" onerror="this.src='https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=800&auto=format&fit=crop'" alt="Pesantren CMI" class="img-fluid rounded-3" style="height:480px; object-fit:cover; width:100%;">
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</header>
 
-    <!-- Hero Section -->
-    <header id="beranda" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <!-- Background decorative blobs -->
-        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-100 mix-blend-multiply filter blur-3xl opacity-70 blob-anim z-0"></div>
-        <div class="absolute top-40 left-10 w-72 h-72 rounded-full bg-amber-50 mix-blend-multiply filter blur-3xl opacity-80 blob-anim z-0" style="animation-delay: 2s;"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <!-- Text Content -->
-                <div class="text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-semibold mb-6">
-                        <span class="relative flex h-3 w-3">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-                        </span>
-                        Gelombang 1 Dibuka
-                    </div>
-                    <h2 class="text-5xl lg:text-7xl font-serif font-semibold text-slate-900 leading-tight mb-6">
-                        Membangun <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-900">Generasi Qur'ani.</span>
-                    </h2>
-                    <p class="text-lg text-slate-600 font-light mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                        Bergabunglah bersama kami di Pesantren Al-Hikmah. Kami mencetak santri yang berakhlak mulia, cerdas, dan mandiri dengan sistem pendidikan modern yang terintegrasi.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="/register" class="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                            Mulai Pendaftaran
-                        </a>
-                        <a href="#alur" class="group bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-full font-semibold text-lg hover:border-blue-500 hover:text-blue-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm">
-                            Lihat Panduan
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
+<!-- Alur Pendaftaran -->
+<section id="alur" class="py-5" style="padding-top:5rem!important; padding-bottom:5rem!important; background:#fff">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-2 rounded-pill mb-3">ALUR PENDAFTARAN</span>
+            <h2 class="font-serif display-6 fw-bold text-dark">Tahapan Pendaftaran Santri</h2>
+            <p class="text-secondary mt-3 mx-auto" style="max-width:560px">Ikuti 4 tahapan berikut untuk mendaftarkan putra-putri Anda sebagai santri baru Pesantren CMI.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h5 class="fw-bold mb-3">Pendaftaran</h5>
+                    <p class="text-secondary small mb-0">Isi data diri, data orang tua, unggah dokumen persyaratan & video bacaan Al-Qur'an. Sistem akan memberikan nomor registrasi.</p>
                 </div>
-
-                <!-- Feature Image/Mockup -->
-                <div class="relative mx-auto w-full max-w-lg lg:max-w-none">
-                    <div class="relative rounded-3xl overflow-hidden shadow-2xl glass-effect p-2 transform rotate-1 hover:rotate-0 transition-transform duration-500">
-                        <!-- Fix for broken image -->
-                        <img src="https://images.unsplash.com/photo-1542810634-71277d95dc8f?q=80&w=1000&auto=format&fit=crop" onerror="this.src='https://plus.unsplash.com/premium_photo-1678129080782-42fe1e4ff04f?q=80&w=1000&auto=format&fit=crop'" alt="Islamic Study" class="w-full h-[500px] object-cover rounded-2xl opacity-90">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent rounded-2xl"></div>
-                        <div class="absolute bottom-8 left-8 right-8">
-                            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl flex items-center gap-4 text-white">
-                                <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center font-bold text-xl">🎓</div>
-                                <div>
-                                    <p class="text-sm font-light">Total Santri Aktif</p>
-                                    <p class="font-bold text-xl">1,240+ Santri</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h5 class="fw-bold mb-3">Seleksi</h5>
+                    <p class="text-secondary small mb-0">Admin melakukan verifikasi berkas dan input hasil tes bacaan Al-Qur'an, hafalan, serta wawancara.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h5 class="fw-bold mb-3">Pengumuman</h5>
+                    <p class="text-secondary small mb-0">Cek hasil seleksi menggunakan nomor registrasi dan unduh surat kelulusan jika dinyatakan lulus.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h5 class="fw-bold mb-3">Daftar Ulang</h5>
+                    <p class="text-secondary small mb-0">Konfirmasi kesediaan dan unggah bukti pembayaran. Status akan diperbarui menjadi santri aktif.</p>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</section>
 
-    <!-- Flow Section -->
-    <section id="alur" class="py-24 bg-white relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h3 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">Pendaftaran Mudah</h3>
-                <h2 class="text-4xl font-serif font-bold text-slate-900">Alur Pendaftaran Santri</h2>
-                <p class="mt-4 text-slate-500 max-w-2xl mx-auto text-lg">Ikuti tahapan sederhana ini untuk mendaftarkan putra-putri Anda. Sistem kami dirancang untuk  memudahkan proses pendaftaran dari rumah.</p>
-            </div>
+<!-- Footer -->
+<footer class="footer py-5">
+    <div class="container text-center">
+        <div style="width:50px; height:50px; border-radius:14px; background:linear-gradient(135deg,#0d6efd,#0dcaf0); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:.8rem; margin:0 auto 1.5rem">CMI</div>
+        <p class="text-secondary mb-2">&copy; {{ date('Y') }} Pesantren & BCB Cahaya Mutiara Insani. Mencetak Generasi Penghafal Al-Qur'an.</p>
+        <p class="small text-secondary">Tahfidz Al-Quran Intensif & Penguatan Ilmu Syar'i</p>
+    </div>
+</footer>
 
-            <div class="grid md:grid-cols-4 gap-8 relative">
-                <!-- Line connector -->
-                <div class="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-slate-100 z-0"></div>
-
-                <!-- Step 1 -->
-                <div class="relative z-10 text-center group">
-                    <div class="w-24 h-24 mx-auto bg-slate-50 border-2 border-slate-200 rounded-full flex items-center justify-center mb-6 group-hover:border-blue-500 group-hover:bg-blue-50 transition-colors duration-300">
-                        <div class="text-3xl">📝</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-900 mb-2">1. Buat Akun</h4>
-                    <p class="text-slate-500 text-sm">Daftar dan melengkapi data dasar diri untuk mendapatkan akses masuk.</p>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="relative z-10 text-center group">
-                    <div class="w-24 h-24 mx-auto bg-slate-50 border-2 border-slate-200 rounded-full flex items-center justify-center mb-6 group-hover:border-blue-500 group-hover:bg-blue-50 transition-colors duration-300">
-                        <div class="text-3xl">💳</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-900 mb-2">2. Pembayaran</h4>
-                    <p class="text-slate-500 text-sm">Transfer biaya pendaftaran & unggah bukti untuk diverifikasi panitia.</p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="relative z-10 text-center group">
-                    <div class="w-24 h-24 mx-auto bg-slate-50 border-2 border-slate-200 rounded-full flex items-center justify-center mb-6 group-hover:border-blue-500 group-hover:bg-blue-50 transition-colors duration-300">
-                        <div class="text-3xl">📁</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-900 mb-2">3. Lengkapi Data</h4>
-                    <p class="text-slate-500 text-sm">Isi form identitas dan unggah dokumen pendukung pendaftaran.</p>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="relative z-10 text-center group">
-                    <div class="w-24 h-24 mx-auto bg-slate-50 border-2 border-slate-200 rounded-full flex items-center justify-center mb-6 group-hover:border-blue-500 group-hover:bg-blue-50 transition-colors duration-300">
-                        <div class="text-3xl">🎉</div>
-                    </div>
-                    <h4 class="text-xl font-bold text-slate-900 mb-2">4. Evaluasi & Hasil</h4>
-                    <p class="text-slate-500 text-sm">Wawancara offline, pantau status pengumuman, dan daftar ulang.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 py-12 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-400">
-            <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg flex items-center justify-center text-white font-bold text-xl mb-6">
-                P
-            </div>
-            <p class="mb-4">© 2024 Pendaftaran Pesantren Al-Hikmah. Membangun Generasi Rabbani.</p>
-            <p class="text-sm">Jalan Pendidikan No. 123, Kota Santri. Email: info@pesantren.ac.id | Telp: (021) 1234567</p>
-        </div>
-    </footer>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            const el = document.querySelector(this.getAttribute('href'));
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
 </body>
 </html>

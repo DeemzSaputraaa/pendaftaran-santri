@@ -3,87 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Sistem Pendaftaran Santri Baru</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: { fontFamily: { sans: ['Outfit', 'sans-serif'] } }
-            }
-        }
-    </script>
+    <title>Masuk — Pendaftaran Santri CMI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .auth-image { background: linear-gradient(135deg, #0a2540 0%, #0d3868 100%); position: relative; overflow: hidden; }
+        .auth-image::before { content:''; position:absolute; top:0; right:0; width:300px; height:300px; background:radial-gradient(circle,rgba(201,168,76,.15),transparent 70%); border-radius:50%; }
+        .auth-image .overlay-text { position: absolute; bottom: 3rem; left: 3rem; right: 3rem; z-index: 2; }
+        .brand-icon { width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#0d6efd,#0dcaf0); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:.75rem; }
+    </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 antialiased selection:bg-blue-500 selection:text-white">
-
-    <div class="min-h-screen flex flex-col md:flex-row">
-        <!-- Image Section -->
-        <div class="hidden md:block md:w-1/2 relative">
-            <img src="https://images.unsplash.com/photo-1542810634-71277d95dc8f?q=80&w=1000&auto=format&fit=crop" onerror="this.src='https://plus.unsplash.com/premium_photo-1678129080782-42fe1e4ff04f?q=80&w=1000&auto=format&fit=crop'" alt="Islamic Study BG" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
-            <div class="absolute bottom-12 left-12 right-12 text-white">
-                <h2 class="text-3xl font-bold mb-4">Kembali Lanjutkan Proses Pendaftaran.</h2>
-                <p class="text-slate-200">Masuk ke akun Anda untuk melihat jadwal wawancara, memperbarui identitas diri, dan memantau status terbaru santri.</p>
-            </div>
-            <!-- Back to Home -->
-            <a href="/" class="absolute top-8 left-8 flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/20 hover:bg-black/40 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                Kembali ke Beranda
-            </a>
+<body>
+<div class="row g-0 min-vh-100">
+    <!-- Image Side -->
+    <div class="col-md-5 d-none d-md-flex auth-image">
+        <div class="overlay-text text-white">
+            <h2 class="fw-bold fs-3 mb-3">Lanjutkan Proses Pendaftaran</h2>
+            <p style="color:rgba(255,255,255,.7)">Masuk ke akun Anda untuk melengkapi data, mengunggah dokumen, dan memantau status pendaftaran santri baru.</p>
         </div>
-
-        <!-- Form Section -->
-        <div class="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
-            <div class="w-full max-w-md">
-                <!-- Mobile only back button -->
-                <a href="/" class="md:hidden flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-8 text-sm font-medium">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                    Kembali ke Beranda
-                </a>
-
-                <div class="mb-10">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg flex items-center justify-center text-white font-bold text-2xl mb-6">
-                        P
-                    </div>
-                    <h1 class="text-3xl font-bold text-slate-900 mb-2">Selamat Datang</h1>
-                    <p class="text-slate-500">Silakan masukkan email dan password yang Anda buat pada saat registrasi pendaftaran.</p>
-                </div>
-
-                <!-- Real Form -->
-                @if ($errors->any())
-                    <div class="mb-4 p-4 bg-red-50 text-red-600 rounded-lg text-sm">
-                        {{ $errors->first() }}
-                    </div>
-                @endif
-                <form action="/login" method="POST" class="space-y-6">
-                    @csrf
-                    <div>
-                        <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Alamat Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}" id="email" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all" placeholder="contoh@user.com" required>
-                    </div>
-                    
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <label for="password" class="block text-sm font-semibold text-slate-700">Password</label>
-                            <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Lupa Password?</a>
-                        </div>
-                        <input type="password" name="password" id="password" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all" placeholder="••••••••" required>
-                    </div>
-
-                    <button type="submit" class="w-full bg-slate-900 hover:bg-blue-600 text-white font-bold py-3.5 px-4 rounded-lg transition-colors shadow-lg hover:shadow-xl hover:-translate-y-0.5 mt-4">
-                        Masuk ke Dashboard
-                    </button>
-                    
-                    <p class="text-center text-sm text-slate-600 mt-6">
-                        Belum punya akun pendaftaran? 
-                        <a href="/register" class="font-bold text-blue-600 hover:underline">Daftar di sini</a>
-                    </p>
-                </form>
-            </div>
-        </div>
+        <a href="/" class="position-absolute top-0 start-0 m-4 btn btn-sm text-white" style="background:rgba(0,0,0,.2); backdrop-filter:blur(8px); border-radius:100px; padding:.45rem 1rem; font-size:.8rem">
+            <i class="bi bi-arrow-left me-1"></i> Beranda
+        </a>
     </div>
 
+    <!-- Form Side -->
+    <div class="col-md-7 d-flex align-items-center justify-content-center bg-white p-4 p-lg-5">
+        <div class="w-100" style="max-width:460px">
+            <a href="/" class="d-md-none text-decoration-none text-secondary d-inline-flex align-items-center gap-1 mb-4" style="font-size:.85rem">
+                <i class="bi bi-arrow-left"></i> Beranda
+            </a>
+
+            <div class="mb-5">
+                <div class="brand-icon mb-4">CMI</div>
+                <h1 class="fw-bold fs-3 mb-2" style="color: #0f172a">Selamat Datang</h1>
+                <p class="text-secondary" style="font-size: .95rem; line-height:1.5">Silakan masukkan email dan password yang Anda buat pada<br>saat registrasi pendaftaran.</p>
+            </div>
+
+            @if ($errors->any())
+                <div class="alert alert-danger py-2 px-3" style="font-size:.875rem">
+                    <i class="bi bi-exclamation-circle me-1"></i> {{ $errors->first() }}
+                </div>
+            @endif
+
+            <form action="/login" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label fw-bold mb-1" style="font-size:.85rem; color:#1e293b">Alamat Email</label>
+                    <input type="email" name="email" value="{{ old('email') }}" class="form-control" style="font-size:1rem; padding:.75rem 1rem" placeholder="contoh@user.com" required>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="form-label fw-bold mb-0" style="font-size:.85rem; color:#1e293b">Password</label>
+                        <a href="#" class="text-primary text-decoration-none fw-semibold" style="font-size:.85rem">Lupa Password?</a>
+                    </div>
+                    <input type="password" name="password" class="form-control" style="font-size:1rem; padding:.75rem 1rem" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 fw-bold mb-4 py-3" style="font-size:1.05rem; background:#1e3a8a; border-color:#1e3a8a">
+                    Masuk ke Dashboard
+                </button>
+                <p class="text-center text-secondary" style="font-size:.8rem">
+                    Belum punya akun pendaftaran? <a href="/register" class="fw-bold text-primary text-decoration-none">Daftar di sini</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

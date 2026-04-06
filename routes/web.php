@@ -1,27 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\IdentitasController;
+use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\DaftarUlangController;
+use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\AdminController;
 
-// Landing Page (Beranda Non-Login)
+// ==========================================
+// PUBLIC ROUTES
+// ==========================================
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Auth Routes (Real Implementation)
+// Pengumuman Hasil Seleksi (Publik)
+Route::get('/pengumuman', [PengumumanController::class, 'index']);
+Route::post('/pengumuman/cek', [PengumumanController::class, 'cek'])->name('pengumuman.cek');
+
+// ==========================================
+// AUTH ROUTES (Guest Only)
+// ==========================================
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate']);
@@ -29,27 +30,39 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'store']);
 });
 
+// ==========================================
+// SANTRI DASHBOARD ROUTES
+// ==========================================
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Dashboard Calon Santri
     Route::prefix('dashboard')->group(function () {
-        Route::get('/', function () {
-            return view('dashboard.index');
-        });
-        
-        Route::get('/pembayaran', function() {
-            return view('dashboard.pembayaran');
-        });
+        // Beranda Dashboard
+        Route::get('/', [DashboardController::class, 'index']);
 
-        Route::post('/pembayaran/checkout', [PaymentController::class, 'createInvoice'])->name('checkout');
+        // Identitas Diri (Biodata)
+        Route::get('/identitas', [IdentitasController::class, 'index']);
+        Route::post('/identitas', [IdentitasController::class, 'store'])->name('identitas.store');
 
-        Route::get('/identitas', function() {
-            return view('dashboard.identitas');
-        });
+        // Dokumen Berkas
+        Route::get('/dokumen', [DokumenController::class, 'index']);
+        Route::post('/dokumen/upload', [DokumenController::class, 'upload'])->name('dokumen.upload');
 
-        Route::get('/dokumen', function() {
-            return view('dashboard.dokumen');
-        });
+        // Biaya Pendaftaran
+        Route::get('/biaya-pendaftaran', [DaftarUlangController::class, 'index']);
+        Route::post('/biaya-pendaftaran', [DaftarUlangController::class, 'upload'])->name('biaya-pendaftaran.upload');
     });
+});
+
+// ==========================================
+// ADMIN ROUTES
+// ==========================================
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index']);
+    Route::get('/pendaftar', [AdminController::class, 'pendaftar']);
+    Route::get('/verifikasi/{id}', [AdminController::class, 'verifikasi'])->name('admin.verifikasi');
+    Route::post('/dokumen/{id}/update', [AdminController::class, 'updateDokumen'])->name('admin.dokumen.update');
+    Route::get('/seleksi/{id}', [AdminController::class, 'seleksi'])->name('admin.seleksi');
+    Route::post('/seleksi/{id}', [AdminController::class, 'simpanSeleksi'])->name('admin.seleksi.simpan');
+    Route::post('/pembayaran/{id}/verifikasi', [AdminController::class, 'verifikasiPembayaran'])->name('admin.pembayaran.verifikasi');
 });

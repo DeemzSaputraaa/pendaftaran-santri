@@ -6,21 +6,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Show the login form.
-     */
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle authentication attempt.
-     */
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -31,7 +24,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redirect based on role if needed, currently everyone goes to dashboard
+            // Redirect admin ke panel admin
+            if (auth()->user()->isAdmin()) {
+                return redirect('/admin');
+            }
+
             return redirect()->intended('/dashboard');
         }
 
@@ -40,17 +37,11 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    /**
-     * Show the registration form.
-     */
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle registration processing.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -58,7 +49,7 @@ class AuthController extends Controller
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'terms' => ['accepted'], // Checkbox terms
+            'terms' => ['accepted'],
         ]);
 
         $user = User::create([
@@ -67,22 +58,18 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'role' => 'santri',
-            'status_pendaftaran' => 'belum_bayar',
+            'nomor_registrasi' => User::generateNomorRegistrasi(),
+            'status_pendaftaran' => 'pendaftar_baru',
         ]);
 
-        // Login otomatis setelah register
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect('/dashboard')->with('success', 'Pendaftaran berhasil! Nomor registrasi Anda: ' . $user->nomor_registrasi);
     }
 
-    /**
-     * Handle logout.
-     */
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

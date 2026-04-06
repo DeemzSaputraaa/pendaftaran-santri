@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -17,29 +14,28 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
-            // Tambahan field untuk pendaftaran santri
+
+            // Tambahan untuk pendaftaran santri CMI
             $table->string('phone')->nullable();
+            $table->string('nomor_registrasi')->unique()->nullable();
             $table->enum('role', ['admin', 'santri'])->default('santri');
             $table->enum('status_pendaftaran', [
-                'belum_bayar', 
-                'menunggu_verifikasi_bayar', 
-                'isi_data', 
-                'menunggu_tes', 
-                'lulus', 
+                'pendaftar_baru',
+                'data_lengkap',
+                'berkas_terverifikasi',
+                'menunggu_seleksi',
+                'lulus',
+                'cadangan',
                 'tidak_lulus',
-                'pemberkasan_ulang',
-                'selesai'
-            ])->default('belum_bayar');
+                'daftar_ulang',
+                'aktif'
+            ])->default('pendaftar_baru');
 
             $table->rememberToken();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

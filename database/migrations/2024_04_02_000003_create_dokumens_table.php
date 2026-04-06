@@ -11,8 +11,15 @@ return new class extends Migration
         Schema::create('dokumens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            
-            $table->enum('jenis_dokumen', ['kartu_keluarga', 'akta_kelahiran', 'ijazah', 'pas_foto']);
+
+            $table->enum('jenis_dokumen', [
+                'pas_foto',
+                'fc_ktp',
+                'fc_ijazah',
+                'surat_kesanggupan',
+                'srt_tidak_merokok',
+                'video_bacaan'
+            ]);
             $table->string('file_path');
             $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->text('catatan_admin')->nullable();
