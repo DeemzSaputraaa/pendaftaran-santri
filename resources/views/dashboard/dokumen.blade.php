@@ -16,7 +16,7 @@
             $docList = [
                 ['key' => 'pas_foto', 'name' => 'Pas Foto 3x4', 'ket' => 'Latar merah/biru, rapi/berpeci, JPG/PNG maks 1MB', 'accept' => '.jpg,.jpeg,.png'],
                 ['key' => 'fc_ktp', 'name' => 'Fotokopi KTP Orang Tua', 'ket' => 'Scan KTP salah satu orang tua, PDF/JPG maks 2MB', 'accept' => '.pdf,.jpg,.jpeg,.png'],
-                ['key' => 'fc_ijazah', 'name' => 'Fotokopi Ijazah / SKL', 'ket' => 'Scan Ijazah atau surat keterangan lulus, PDF/JPG maks 2MB', 'accept' => '.pdf,.jpg,.jpeg,.png'],
+                ['key' => 'kk', 'name' => 'KK', 'ket' => 'Scan Kartu Keluarga, PDF/JPG maks 2MB', 'accept' => '.pdf,.jpg,.jpeg,.png'],
                 ['key' => 'surat_kesanggupan', 'name' => 'Surat Kesanggupan', 'ket' => 'Pernyataan mematuhi aturan (bertanda tangan), PDF/JPG maks 2MB', 'accept' => '.pdf,.jpg,.jpeg,.png'],
                 ['key' => 'srt_tidak_merokok', 'name' => 'Surat Keterangan Tidak Merokok', 'ket' => 'Surat pernyataan tidak merokok, PDF/JPG maks 2MB', 'accept' => '.pdf,.jpg,.jpeg,.png'],
                 ['key' => 'video_bacaan', 'name' => 'Video/VN Bacaan Surat', 'ket' => 'Video bacaan surat pilihan, MP4/MOV maks 20MB', 'accept' => '.mp4,.mov,.avi,.webm'],

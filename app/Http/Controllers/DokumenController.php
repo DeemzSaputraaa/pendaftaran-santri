@@ -18,7 +18,7 @@ class DokumenController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'jenis_dokumen' => 'required|in:pas_foto,fc_ktp,fc_ijazah,surat_kesanggupan,srt_tidak_merokok,video_bacaan',
+            'jenis_dokumen' => 'required|in:pas_foto,fc_ktp,kk,surat_kesanggupan,srt_tidak_merokok,video_bacaan',
             'file' => 'required|file|max:20480', // Max 20MB untuk video
         ]);
 
@@ -70,7 +70,7 @@ class DokumenController extends Controller
     {
         $user->refresh();
         $hasBiodata = $user->biodata !== null;
-        $requiredDocs = ['pas_foto', 'fc_ktp', 'fc_ijazah', 'surat_kesanggupan', 'srt_tidak_merokok', 'video_bacaan'];
+        $requiredDocs = ['pas_foto', 'fc_ktp', 'kk', 'surat_kesanggupan', 'srt_tidak_merokok', 'video_bacaan'];
         $uploadedDocs = $user->dokumens->pluck('jenis_dokumen')->toArray();
         $hasAllDocs = count(array_intersect($requiredDocs, $uploadedDocs)) === count($requiredDocs);
 

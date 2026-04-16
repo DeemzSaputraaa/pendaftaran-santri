@@ -15,7 +15,7 @@ return new class extends Migration
             $table->enum('jenis_dokumen', [
                 'pas_foto',
                 'fc_ktp',
-                'fc_ijazah',
+                'kk',
                 'surat_kesanggupan',
                 'srt_tidak_merokok',
                 'video_bacaan'

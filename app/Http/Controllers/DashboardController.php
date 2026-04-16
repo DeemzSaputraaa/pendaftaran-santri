@@ -13,7 +13,7 @@ class DashboardController extends Controller
 
         // Hitung progress
         $hasBiodata = $user->biodata !== null;
-        $requiredDocs = ['pas_foto', 'fc_ktp', 'fc_ijazah', 'surat_kesanggupan', 'srt_tidak_merokok', 'video_bacaan'];
+        $requiredDocs = ['pas_foto', 'fc_ktp', 'kk', 'surat_kesanggupan', 'srt_tidak_merokok', 'video_bacaan'];
         $uploadedDocs = $user->dokumens->pluck('jenis_dokumen')->toArray();
         $hasAllDocs = count(array_intersect($requiredDocs, $uploadedDocs)) === count($requiredDocs);
 
