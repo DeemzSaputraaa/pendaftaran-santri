@@ -23,69 +23,79 @@
             ];
         @endphp
 
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead>
-                    <tr class="text-secondary small text-nowrap" style="border-bottom:2px solid #e5e7eb">
-                        <th class="fw-semibold py-3" style="min-width:220px">Nama Dokumen</th>
-                        <th class="fw-semibold py-3" style="min-width:280px">Keterangan</th>
-                        <th class="fw-semibold py-3" style="min-width:160px">Status</th>
-                        <th class="fw-semibold py-3" style="min-width:280px">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($docList as $i => $doc)
-                        @php
-                            $uploaded = $dokumens[$doc['key']] ?? null;
-                        @endphp
-                        <tr>
-                            <td class="fw-semibold">{{ $i + 1 }}. {{ $doc['name'] }}</td>
-                            <td class="small text-secondary">{{ $doc['ket'] }}</td>
-                            <td>
-                                @if($uploaded)
-                                    @if($uploaded->status === 'verified')
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Terverifikasi
-                                        </span>
-                                    @elseif($uploaded->status === 'rejected')
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
-                                            <i class="bi bi-x-circle-fill me-1"></i> Ditolak
-                                        </span>
-                                        @if($uploaded->catatan_admin)
-                                            <div class="small text-danger mt-1">{{ $uploaded->catatan_admin }}</div>
+        <form action="{{ route('dokumen.upload-semua') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr class="text-secondary small text-nowrap" style="border-bottom:2px solid #e5e7eb">
+                            <th class="fw-semibold py-3" style="min-width:220px">Nama Dokumen</th>
+                            <th class="fw-semibold py-3" style="min-width:280px">Keterangan</th>
+                            <th class="fw-semibold py-3" style="min-width:160px">Status</th>
+                            <th class="fw-semibold py-3" style="min-width:280px">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($docList as $i => $doc)
+                            @php
+                                $uploaded = $dokumens[$doc['key']] ?? null;
+                            @endphp
+                            <tr>
+                                <td class="fw-semibold">{{ $i + 1 }}. {{ $doc['name'] }}</td>
+                                <td class="small text-secondary">{{ $doc['ket'] }}</td>
+                                <td>
+                                    @if($uploaded)
+                                        @if($uploaded->status === 'verified')
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Terverifikasi
+                                            </span>
+                                        @elseif($uploaded->status === 'rejected')
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
+                                                <i class="bi bi-x-circle-fill me-1"></i> Ditolak
+                                            </span>
+                                            @if($uploaded->catatan_admin)
+                                                <div class="small text-danger mt-1">{{ $uploaded->catatan_admin }}</div>
+                                            @endif
+                                        @else
+                                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1">
+                                                <i class="bi bi-clock-fill me-1"></i> Menunggu Review
+                                            </span>
                                         @endif
                                     @else
-                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1">
-                                            <i class="bi bi-clock-fill me-1"></i> Menunggu Review
+                                        <span class="badge bg-light text-secondary border px-2 py-1">
+                                            <i class="bi bi-dash-circle me-1"></i> Belum Unggah
                                         </span>
                                     @endif
-                                @else
-                                    <span class="badge bg-light text-secondary border px-2 py-1">
-                                        <i class="bi bi-dash-circle me-1"></i> Belum Unggah
-                                    </span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($uploaded && $uploaded->status !== 'rejected')
-                                    <a href="{{ asset('storage/' . $uploaded->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary me-1">
-                                        <i class="bi bi-eye"></i> Lihat
-                                    </a>
-                                @endif
+                                </td>
+                                <td>
+                                    @if($uploaded && $uploaded->status !== 'rejected')
+                                        <a href="{{ asset('storage/' . $uploaded->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="bi bi-eye"></i> Lihat
+                                        </a>
+                                    @endif
 
-                                @if(!$uploaded || $uploaded->status === 'rejected')
-                                    <form action="{{ route('dokumen.upload') }}" method="POST" enctype="multipart/form-data" class="d-inline-flex align-items-center gap-2">
-                                        @csrf
-                                        <input type="hidden" name="jenis_dokumen" value="{{ $doc['key'] }}">
-                                        <input type="file" name="file" accept="{{ $doc['accept'] }}" class="form-control form-control-sm" style="min-width:200px" required>
-                                        <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-upload"></i></button>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                                    @if(!$uploaded || $uploaded->status === 'rejected')
+                                        <div class="d-inline-flex align-items-center gap-2">
+                                            <input type="file" name="{{ $doc['key'] }}" accept="{{ $doc['accept'] }}" class="form-control form-control-sm" style="min-width:200px">
+                                            <button type="submit" name="single_upload" value="{{ $doc['key'] }}" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-upload"></i>
+                                            </button>
+                                        </div>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 pt-3 border-top">
+                <button type="submit" class="btn btn-primary fw-bold">
+                    <i class="bi bi-cloud-upload me-2"></i> Upload Semua
+                </button>
+                <div class="form-text mt-2">Pilih beberapa file di tabel di atas, lalu klik tombol ini untuk unggah sekaligus.</div>
+            </div>
+        </form>
 
     </div>
 </div>

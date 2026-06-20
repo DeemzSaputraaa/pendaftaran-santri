@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
         // Dokumen Berkas
         Route::get('/dokumen', [DokumenController::class, 'index']);
         Route::post('/dokumen/upload', [DokumenController::class, 'upload'])->name('dokumen.upload');
+        Route::post('/dokumen/upload-semua', [DokumenController::class, 'uploadSemua'])->name('dokumen.upload-semua');
 
         // Biaya Pendaftaran
         Route::get('/biaya-pendaftaran', [BiayaPendaftaranController::class, 'index']);

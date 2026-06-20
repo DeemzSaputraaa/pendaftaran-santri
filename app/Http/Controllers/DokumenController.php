@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dokumen;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Http\Request;
 
 class DokumenController extends Controller
@@ -23,25 +24,90 @@ class DokumenController extends Controller
         ]);
 
         $jenis = $request->jenis_dokumen;
+        $this->validateDocumentFile($request, 'file', $jenis);
 
-        // Validasi ukuran berdasarkan jenis
-        if ($jenis === 'video_bacaan') {
-            $request->validate(['file' => 'mimes:mp4,mov,avi,webm|max:20480']);
-        } elseif ($jenis === 'pas_foto') {
-            $request->validate(['file' => 'mimes:jpg,jpeg,png|max:1024']);
-        } else {
-            $request->validate(['file' => 'mimes:pdf,jpg,jpeg,png|max:2048']);
+        $user = auth()->user();
+        $this->storeDocumentFile($user->id, $jenis, $request->file('file'));
+
+        // Cek kelengkapan data
+        $this->checkAndUpdateStatus($user);
+
+        $namaDoc = str_replace('_', ' ', ucfirst($jenis));
+        return back()->with('success', "Dokumen {$namaDoc} berhasil diunggah!");
+    }
+
+    public function uploadSemua(Request $request)
+    {
+        $allowedFields = ['pas_foto', 'fc_ktp', 'kk', 'surat_kesanggupan', 'srt_tidak_merokok', 'video_bacaan'];
+        $singleUpload = $request->input('single_upload');
+
+        if ($singleUpload !== null) {
+            if (!in_array($singleUpload, $allowedFields, true)) {
+                return back()->with('error', 'Jenis dokumen tidak valid.');
+            }
+
+            if (!$request->hasFile($singleUpload)) {
+                return back()->with('error', 'Pilih file terlebih dahulu sebelum mengunggah dokumen ini.');
+            }
+
+            $this->validateDocumentFile($request, $singleUpload, $singleUpload);
+
+            $user = auth()->user();
+            $this->storeDocumentFile($user->id, $singleUpload, $request->file($singleUpload));
+            $this->checkAndUpdateStatus($user);
+
+            $namaDoc = str_replace('_', ' ', ucfirst($singleUpload));
+            return back()->with('success', "Dokumen {$namaDoc} berhasil diunggah!");
+        }
+
+        $hasAtLeastOneFile = false;
+
+        foreach ($allowedFields as $field) {
+            if ($request->hasFile($field)) {
+                $hasAtLeastOneFile = true;
+                $this->validateDocumentFile($request, $field, $field);
+            }
+        }
+
+        if (!$hasAtLeastOneFile) {
+            return back()->with('error', 'Pilih minimal satu file untuk upload semua dokumen.');
         }
 
         $user = auth()->user();
+        $uploadedCount = 0;
 
-        // Hapus file lama jika ada
-        $existing = Dokumen::where('user_id', $user->id)
+        foreach ($allowedFields as $field) {
+            if (!$request->hasFile($field)) {
+                continue;
+            }
+
+            $this->storeDocumentFile($user->id, $field, $request->file($field));
+            $uploadedCount++;
+        }
+
+        $this->checkAndUpdateStatus($user);
+
+        return back()->with('success', "{$uploadedCount} dokumen berhasil diunggah sekaligus.");
+    }
+
+    private function validateDocumentFile(Request $request, string $field, string $jenis): void
+    {
+        if ($jenis === 'video_bacaan') {
+            $request->validate([$field => 'file|mimes:mp4,mov,avi,webm|max:20480']);
+        } elseif ($jenis === 'pas_foto') {
+            $request->validate([$field => 'file|mimes:jpg,jpeg,png|max:1024']);
+        } else {
+            $request->validate([$field => 'file|mimes:pdf,jpg,jpeg,png|max:2048']);
+        }
+    }
+
+    private function storeDocumentFile(int $userId, string $jenis, UploadedFile $file): void
+    {
+        $existing = Dokumen::where('user_id', $userId)
             ->where('jenis_dokumen', $jenis)
             ->first();
 
         if ($existing) {
-            // Hapus file fisik lama
             $oldPath = storage_path('app/public/' . $existing->file_path);
             if (file_exists($oldPath)) {
                 unlink($oldPath);
@@ -49,21 +115,14 @@ class DokumenController extends Controller
             $existing->delete();
         }
 
-        // Simpan file baru
-        $path = $request->file('file')->store('dokumen/' . $user->id, 'public');
+        $path = $file->store('dokumen/' . $userId, 'public');
 
         Dokumen::create([
-            'user_id' => $user->id,
+            'user_id' => $userId,
             'jenis_dokumen' => $jenis,
             'file_path' => $path,
             'status' => 'pending',
         ]);
-
-        // Cek kelengkapan data
-        $this->checkAndUpdateStatus($user);
-
-        $namaDoc = str_replace('_', ' ', ucfirst($jenis));
-        return back()->with('success', "Dokumen {$namaDoc} berhasil diunggah!");
     }
 
     private function checkAndUpdateStatus($user)
