@@ -56,6 +56,11 @@
             <a href="/dashboard/biaya-pendaftaran" class="nav-link {{ request()->is('dashboard/biaya-pendaftaran') ? 'active' : '' }}">
                 <i class="bi bi-cash-stack"></i> Biaya Pendaftaran
             </a>
+            @if(in_array(auth()->user()->status_pendaftaran, ['lulus', 'daftar_ulang', 'aktif']))
+                <a href="{{ route('daftar-ulang') }}" class="nav-link {{ request()->is('dashboard/daftar-ulang') ? 'active' : '' }}">
+                    <i class="bi bi-check2-square"></i> Daftar Ulang
+                </a>
+            @endif
         </nav>
 
         <div class="nav-label mt-3">Informasi</div>
@@ -107,6 +112,12 @@
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i> {{ $errors->first() }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif

@@ -41,6 +41,11 @@ class User extends Authenticatable
         return $this->hasMany(Dokumen::class);
     }
 
+    public function pembayarans()
+    {
+        return $this->hasMany(Pembayaran::class);
+    }
+
     public function seleksi()
     {
         return $this->hasOne(Seleksi::class);
@@ -48,7 +53,12 @@ class User extends Authenticatable
 
     public function pembayaran()
     {
-        return $this->hasOne(Pembayaran::class);
+        return $this->hasOne(Pembayaran::class)->where('jenis_pembayaran', 'biaya_pendaftaran');
+    }
+
+    public function pembayaranDaftarUlang()
+    {
+        return $this->hasOne(Pembayaran::class)->where('jenis_pembayaran', 'daftar_ulang');
     }
 
     public function isAdmin()

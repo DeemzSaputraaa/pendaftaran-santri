@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BiayaPendaftaranController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IdentitasController;
 use App\Http\Controllers\DokumenController;
@@ -49,8 +50,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/dokumen/upload', [DokumenController::class, 'upload'])->name('dokumen.upload');
 
         // Biaya Pendaftaran
-        Route::get('/biaya-pendaftaran', [DaftarUlangController::class, 'index']);
-        Route::post('/biaya-pendaftaran', [DaftarUlangController::class, 'upload'])->name('biaya-pendaftaran.upload');
+        Route::get('/biaya-pendaftaran', [BiayaPendaftaranController::class, 'index']);
+        Route::post('/biaya-pendaftaran', [BiayaPendaftaranController::class, 'upload'])->name('biaya-pendaftaran.upload');
+
+        // Daftar Ulang
+        Route::get('/daftar-ulang', [DaftarUlangController::class, 'index'])->name('daftar-ulang');
+        Route::post('/daftar-ulang', [DaftarUlangController::class, 'upload'])->name('daftar-ulang.upload');
     });
 });
 

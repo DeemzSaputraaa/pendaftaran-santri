@@ -95,7 +95,7 @@
 
                 @if($santri->pembayaran)
                     <div class="border rounded-3 p-3 mt-4">
-                        <h6 class="fw-bold small mb-2"><i class="bi bi-cash-stack text-warning me-2"></i>Bukti Pembayaran Daftar Ulang</h6>
+                        <h6 class="fw-bold small mb-2"><i class="bi bi-cash-stack text-warning me-2"></i>Bukti Pembayaran Pendaftaran</h6>
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <div>
                                 <span class="badge bg-{{ $santri->pembayaran->status === 'verified' ? 'success' : ($santri->pembayaran->status === 'rejected' ? 'danger' : 'warning') }}-subtle text-{{ $santri->pembayaran->status === 'verified' ? 'success' : ($santri->pembayaran->status === 'rejected' ? 'danger' : 'warning') }} small">
@@ -124,11 +124,49 @@
                     </div>
                 @endif
 
+                @if($santri->pembayaranDaftarUlang)
+                    <div class="border rounded-3 p-3 mt-4">
+                        <h6 class="fw-bold small mb-2"><i class="bi bi-check2-square text-primary me-2"></i>Daftar Ulang Santri</h6>
+                        <div class="small text-secondary mb-2">
+                            <div>Kesediaan: <strong class="text-dark">{{ $santri->pembayaranDaftarUlang->konfirmasi_kesediaan ? 'Bersedia' : 'Belum mengonfirmasi' }}</strong></div>
+                            <div>Nominal: <strong class="text-dark">Rp {{ number_format($santri->pembayaranDaftarUlang->nominal, 0, ',', '.') }}</strong></div>
+                            @if($santri->pembayaranDaftarUlang->catatan_santri)
+                                <div>Catatan Santri: <span class="text-dark">{{ $santri->pembayaranDaftarUlang->catatan_santri }}</span></div>
+                            @endif
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <div>
+                                <span class="badge bg-{{ $santri->pembayaranDaftarUlang->status === 'verified' ? 'success' : ($santri->pembayaranDaftarUlang->status === 'rejected' ? 'danger' : 'warning') }}-subtle text-{{ $santri->pembayaranDaftarUlang->status === 'verified' ? 'success' : ($santri->pembayaranDaftarUlang->status === 'rejected' ? 'danger' : 'warning') }} small">
+                                    {{ ucfirst($santri->pembayaranDaftarUlang->status) }}
+                                </span>
+                                <a href="{{ asset('storage/' . $santri->pembayaranDaftarUlang->bukti_pembayaran) }}" target="_blank" class="small text-primary ms-2">
+                                    <i class="bi bi-eye me-1"></i>Lihat Bukti
+                                </a>
+                            </div>
+                            @if($santri->pembayaranDaftarUlang->status === 'pending')
+                            <div class="d-flex gap-2">
+                                <form action="{{ route('admin.pembayaran.verifikasi', $santri->pembayaranDaftarUlang->id) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="status" value="verified">
+                                    <button class="btn btn-sm btn-success"><i class="bi bi-check-lg me-1"></i>Verifikasi</button>
+                                </form>
+                                <form action="{{ route('admin.pembayaran.verifikasi', $santri->pembayaranDaftarUlang->id) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="status" value="rejected">
+                                    <input type="text" name="catatan_admin" class="form-control form-control-sm d-inline" placeholder="Alasan..." style="width:140px">
+                                    <button class="btn btn-sm btn-danger mt-1"><i class="bi bi-x-lg me-1"></i>Tolak</button>
+                                </form>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
 
         <!-- Link ke Seleksi -->
-        @if(in_array($santri->status_pendaftaran, ['berkas_terverifikasi', 'data_lengkap']))
+        @if(in_array($santri->status_pendaftaran, ['berkas_terverifikasi', 'data_lengkap', 'menunggu_seleksi']))
             <div class="mt-3">
                 <a href="{{ route('admin.seleksi', $santri->id) }}" class="btn btn-warning fw-bold">
                     <i class="bi bi-clipboard-data me-2"></i>Input Nilai Seleksi

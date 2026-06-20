@@ -100,7 +100,7 @@
 
                     @if($hasil->status_kelulusan === 'lulus')
                         <div class="text-center mt-4 pt-3 border-top">
-                            <p class="small text-secondary mb-3">Silakan login ke dashboard untuk melakukan <strong>Daftar Ulang</strong>.</p>
+                            <p class="small text-secondary mb-3">Silakan login ke dashboard, lalu buka menu <strong>Daftar Ulang</strong> untuk konfirmasi kesediaan dan unggah bukti pembayaran.</p>
                             <a href="/login" class="btn btn-primary fw-bold"><i class="bi bi-box-arrow-in-right me-1"></i> Login ke Dashboard</a>
                         </div>
                     @endif

@@ -25,7 +25,7 @@ class AdminController extends Controller
     public function pendaftar()
     {
         $pendaftars = User::where('role', 'santri')
-            ->with(['biodata', 'dokumens', 'seleksi', 'pembayaran'])
+            ->with(['biodata', 'dokumens', 'seleksi', 'pembayaran', 'pembayaranDaftarUlang'])
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
@@ -36,7 +36,7 @@ class AdminController extends Controller
     public function verifikasi($id)
     {
         $santri = User::where('role', 'santri')
-            ->with(['biodata', 'dokumens', 'seleksi', 'pembayaran'])
+            ->with(['biodata', 'dokumens', 'seleksi', 'pembayaran', 'pembayaranDaftarUlang'])
             ->findOrFail($id);
 
         return view('admin.verifikasi', compact('santri'));
@@ -61,7 +61,9 @@ class AdminController extends Controller
             && $user->dokumens()->count() >= 6;
 
         if ($allVerified && $user->status_pendaftaran === 'data_lengkap') {
-            $user->status_pendaftaran = 'berkas_terverifikasi';
+            $user->status_pendaftaran = $user->pembayaran?->status === 'verified'
+                ? 'menunggu_seleksi'
+                : 'berkas_terverifikasi';
             $user->save();
         }
 
@@ -125,7 +127,25 @@ class AdminController extends Controller
         $pembayaran->catatan_admin = $request->catatan_admin;
         $pembayaran->save();
 
-        // Pembayaran pendaftaran diverifikasi (Opsional: ubah ke status menunggu seleksi jika dokumen juga lengkap)
+        $user = $pembayaran->user()->with('dokumens')->firstOrFail();
+
+        if ($pembayaran->jenis_pembayaran === 'biaya_pendaftaran' && $request->status === 'verified') {
+            $allVerified = $user->dokumens()->where('status', '!=', 'verified')->count() === 0
+                && $user->dokumens()->count() >= 6;
+
+            if ($allVerified) {
+                $user->status_pendaftaran = 'menunggu_seleksi';
+                $user->save();
+            } elseif ($user->status_pendaftaran === 'pendaftar_baru') {
+                $user->status_pendaftaran = 'data_lengkap';
+                $user->save();
+            }
+        }
+
+        if ($pembayaran->jenis_pembayaran === 'daftar_ulang' && $request->status === 'verified') {
+            $user->status_pendaftaran = 'aktif';
+            $user->save();
+        }
 
         return back()->with('success', 'Status pembayaran berhasil diperbarui.');
     }

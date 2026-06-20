@@ -43,13 +43,14 @@
                 <p class="text-secondary small mb-4 pb-3 border-bottom">Ikuti langkah-langkah di bawah ini untuk menyelesaikan proses pendaftaran.</p>
 
                 @php
-                    $hasPembayaran = $user->pembayaran !== null;
+                    $hasPembayaran = $hasVerifiedBiayaPendaftaran;
                     $steps = [
                         ['key' => 'akun', 'icon' => 'bi-person-check-fill', 'title' => 'Pendaftaran Akun', 'desc' => 'Anda telah berhasil membuat akun.', 'done' => true],
                         ['key' => 'identitas', 'icon' => 'bi-card-list', 'title' => 'Lengkapi Identitas & Dokumen', 'desc' => 'Isi biodata, upload berkas, dan video bacaan.', 'done' => $hasBiodata && $hasAllDocs],
-                        ['key' => 'pembayaran', 'icon' => 'bi-cash-stack', 'title' => 'Biaya Pendaftaran', 'desc' => 'Upload bukti pembayaran biaya pendaftaran.', 'done' => $hasPembayaran],
-                        ['key' => 'seleksi', 'icon' => 'bi-clipboard-check-fill', 'title' => 'Verifikasi & Seleksi', 'desc' => 'Admin memverifikasi berkas & pembayaran serta menginput hasil tes.', 'done' => in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus','aktif'])],
-                        ['key' => 'pengumuman', 'icon' => 'bi-megaphone-fill', 'title' => 'Pengumuman', 'desc' => 'Cek hasil seleksi melalui menu pengumuman.', 'done' => in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus','aktif'])],
+                        ['key' => 'pembayaran', 'icon' => 'bi-cash-stack', 'title' => 'Biaya Pendaftaran', 'desc' => 'Unggah bukti pembayaran biaya pendaftaran dan tunggu verifikasi admin.', 'done' => $hasPembayaran],
+                        ['key' => 'seleksi', 'icon' => 'bi-clipboard-check-fill', 'title' => 'Verifikasi & Seleksi', 'desc' => 'Admin memverifikasi berkas dan pembayaran lalu menginput hasil tes.', 'done' => in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus','daftar_ulang','aktif'])],
+                        ['key' => 'pengumuman', 'icon' => 'bi-megaphone-fill', 'title' => 'Pengumuman', 'desc' => 'Cek hasil seleksi melalui menu pengumuman.', 'done' => in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus','daftar_ulang','aktif'])],
+                        ['key' => 'daftar_ulang', 'icon' => 'bi-check2-square', 'title' => 'Daftar Ulang', 'desc' => 'Konfirmasi kesediaan dan unggah bukti pembayaran daftar ulang.', 'done' => $hasSubmittedDaftarUlang || $user->status_pendaftaran === 'aktif'],
                     ];
                 @endphp
 
@@ -90,6 +91,12 @@
                             @if($step['key'] === 'pengumuman' && in_array($user->status_pendaftaran, ['lulus','cadangan','tidak_lulus']))
                                 <div class="mt-2">
                                     <a href="/pengumuman" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-megaphone me-1"></i> Lihat Pengumuman</a>
+                                </div>
+                            @endif
+
+                            @if($step['key'] === 'daftar_ulang' && in_array($user->status_pendaftaran, ['lulus', 'daftar_ulang']) && !$step['done'])
+                                <div class="mt-2">
+                                    <a href="{{ route('daftar-ulang') }}" class="btn btn-sm btn-success"><i class="bi bi-check2-square me-1"></i> Isi Daftar Ulang</a>
                                 </div>
                             @endif
                         </div>
